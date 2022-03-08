@@ -19,7 +19,10 @@ class MyGame extends Phaser.Scene
 
     create()
     {
-        const ball = this.physics.add.sprite(300, 400, 'ball');
+        const ball = this.physics.add.image(400, 300, 'ball');
+        ball.setVelocity(100);
+        ball.setCollideWorldBounds(true);
+        ball.setBounce(1);
     }
 
     update(time, delta)
@@ -36,7 +39,9 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 20 }
+            gravity: { 
+                y: 0 
+            }
         }
     }
 };
