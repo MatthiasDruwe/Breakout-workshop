@@ -36,13 +36,17 @@ class MyGame extends Phaser.Scene
 
         this.paddle = this.physics.add.image(400, 550, 'paddle');
         this.paddle.setCollideWorldBounds(true);
-   
+        this.paddle.setPushable(false);
+
+        this.physics.add.collider(this.paddle,ball);
+
         this.keyboard = this.input.keyboard.addKeys(
             {
                 LEFT_KEY: Phaser.Input.Keyboard.KeyCodes.LEFT,
                 RIGHT_KEY: Phaser.Input.Keyboard.KeyCodes.RIGHT
-            }
-);
+            });
+
+        this.physics.world.checkCollision.down = false;
     }
 
     update(time, delta)
