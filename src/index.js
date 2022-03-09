@@ -9,12 +9,22 @@ import block_5_img from './assets/block_5.png';
 import block_6_img from './assets/block_6.png';
 import sky_img from './assets/sky.jpg';
 
+const PADDLE_VELOCITY = 150;
+const LEFT_KEY = 'LEFT';
+const RIGHT_KEY = 'RIGHT';
+
 class MyGame extends Phaser.Scene
 {
+
+    keyboard;
+
+    /** @type {Phaser.Physics.Arcade.Image} */
+    paddle;
 
     preload()
     {  
         this.load.image('ball', ball_img);
+        this.load.image('paddle', paddle_img);
     }
 
     create()
@@ -23,11 +33,32 @@ class MyGame extends Phaser.Scene
         ball.setVelocity(100);
         ball.setCollideWorldBounds(true);
         ball.setBounce(1);
+
+        this.paddle = this.physics.add.image(400, 550, 'paddle');
+        this.paddle.setCollideWorldBounds(true);
+   
+        this.keyboard = this.input.keyboard.addKeys(
+            {
+                LEFT_KEY: Phaser.Input.Keyboard.KeyCodes.LEFT,
+                RIGHT_KEY: Phaser.Input.Keyboard.KeyCodes.RIGHT
+            }
+);
     }
 
     update(time, delta)
     {
 
+        if(this.keyboard.LEFT_KEY.isDown) 
+        {
+            this.paddle.setVelocityX(-PADDLE_VELOCITY);
+        }  
+        else if(this.keyboard.RIGHT_KEY.isDown)
+        {
+            this.paddle.setVelocityX(PADDLE_VELOCITY);
+        }
+        else {
+            this.paddle.setVelocityX(0);
+        }
     }
 }
 
