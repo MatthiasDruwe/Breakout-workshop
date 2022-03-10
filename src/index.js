@@ -180,7 +180,7 @@ class MyGame extends Phaser.Scene
             this.paddle.setVelocityX(0);
         }
 
-        if(this.ball.y > this.renderer.height) {
+        if(this.ball.y >= this.renderer.height) {
             this.gameStarted = false;
             this.lives--;
             this.livesText.setText('Levens: ' + this.lives)
