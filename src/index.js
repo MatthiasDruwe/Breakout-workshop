@@ -12,18 +12,19 @@ import sky_img from './assets/sky.jpg';
 const PADDLE_VELOCITY = 150;
 const LEFT_KEY = 'LEFT';
 const RIGHT_KEY = 'RIGHT';
+const SPACE = 'SPACE';
 const BLOCK_WIDTH = 41;
 const BLOCK_SPACE = 5;
 const BLOCK_HEIGHT = 20;
 
 const levelmap = [
-        [5,6,1,2,3,4,5,6,5,4,3,2,1,6,5],
-        [6,1,2,3,4,5,6,1,6,5,4,3,2,1,6],
-        [1,2,3,4,5,6,1,2,1,6,5,4,3,2,1],
-        [2,3,4,5,6,1,2,3,2,1,6,5,4,3,2],
-        [3,4,5,6,1,2,3,4,3,2,1,6,5,4,3],
-        [4,5,6,1,2,3,4,5,4,3,2,1,6,5,4]
-        ];
+    [5 ,6 ,1 ,2 ,3 ,4 ,5 ,6 ,5 ,4 ,3 ,2 ,1 ,6 ,5],
+    [6 ,1 ,2 ,3 ,4 ,5 ,6 ,1 ,6 ,5 ,4 ,3 ,2 ,1 ,6],
+    [1 ,2 ,3 ,4 ,5 ,6 ,1 ,2 ,1 ,6 ,5 ,4 ,3 ,2 ,1],
+    [2 ,3 ,4 ,5 ,6 ,1 ,2 ,3 ,2 ,1 ,6 ,5 ,4 ,3 ,2],
+    [3 ,4 ,5 ,6 ,1 ,2 ,3 ,4 ,3 ,2 ,1 ,6 ,5 ,4 ,3],
+    [4 ,5 ,6 ,1 ,2 ,3 ,4 ,5 ,4 ,3 ,2 ,1 ,6 ,5 ,4]
+  ];
 
 class MyGame extends Phaser.Scene
 {
@@ -36,7 +37,23 @@ class MyGame extends Phaser.Scene
     /** @type {Phaser.Physics.Arcade.Image} */
     ball;
 
+    /** @type {Phaser.GameObjects.Text} */
+    centerText;
+    
+    /** @type {Phaser.GameObjects.Text} */
+    scoreText;
+
+    /** @type {Phaser.GameObjects.Text} */
+    livesText;
+
+
+    ballVelocity = 100;
+    gameStarted = false;
+
     blocks = [];
+
+    score = 0;
+    lives = 3;
     preload()
     {  
         this.load.image('ball', ball_img);
@@ -51,10 +68,19 @@ class MyGame extends Phaser.Scene
 
     create()
     {
+
+        this.centerText = this.add.text(400 ,300 ,'Druk spatie om het spel te starten!');
+        this.centerText.setOrigin(0.5)
+
+        this.scoreText = this.add.text(2,2,'Score: ' + this.score);
+        
+        this.livesText = this.add.text(798,2,'Levens: ' + this.lives);
+        this.livesText.setOrigin(1,0);
+
         this.ball = this.physics.add.image(400, 300, 'ball');
-        this.ball.setVelocity(100);
         this.ball.setCollideWorldBounds(true);
         this.ball.setBounce(1);
+        this.ball.setVisible(false);
 
         this.paddle = this.physics.add.image(400, 550, 'paddle');
         this.paddle.setCollideWorldBounds(true);
@@ -65,7 +91,8 @@ class MyGame extends Phaser.Scene
         this.keyboard = this.input.keyboard.addKeys(
             {
                 LEFT_KEY: Phaser.Input.Keyboard.KeyCodes.LEFT,
-                RIGHT_KEY: Phaser.Input.Keyboard.KeyCodes.RIGHT
+                RIGHT_KEY: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+                SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE
             });
 
         this.physics.world.checkCollision.down = false;
@@ -110,13 +137,36 @@ class MyGame extends Phaser.Scene
      * @param {Phaser.Physics.Arcade.Image} ball 
      */
     removeBlock(block, ball) {
-        console.log(this.blocks);
-        console.log(this.blocks.indexOf(block));
         block.destroy();
+        this.score++;
+        this.updateScore();
+        const index = this.blocks.indexOf(block);
+        this.blocks.splice(index, 1)
+
+
+        if(this.blocks.length == 0) 
+        {
+            this.centerText.setVisible(true);
+            this.centerText.setText('YOU WON!');
+            this.ball.setVelocity(0);
+            this.ball.setVisible(false);
+        }
+    }
+
+    updateScore()
+    {
+        this.scoreText.setText('Score: ' + this.score);
     }
 
     update(time, delta)
-    {
+    {   
+        if(this.keyboard.SPACE.isDown && !this.gameStarted && this.lives > 0)
+        {
+            this.centerText.setVisible(false);
+            this.ball.setVelocity(this.ballVelocity);
+            this.ball.setVisible(true);
+            this.gameStarted = true;
+        }
 
         if(this.keyboard.LEFT_KEY.isDown) 
         {
@@ -130,7 +180,21 @@ class MyGame extends Phaser.Scene
             this.paddle.setVelocityX(0);
         }
 
-        
+        if(this.ball.y > this.renderer.height) {
+            this.gameStarted = false;
+            this.lives--;
+            this.livesText.setText('Levens: ' + this.lives)
+            this.ball.setPosition(400,300);
+            this.ball.setVisible(false);
+            this.ball.setVelocity(0);
+
+            this.centerText.setVisible(true);
+            if(this.lives>0){
+                this.centerText.setText('Druk spatie om het spel te herstarten!');
+            } else {
+                this.centerText.setText('GAME OVER!')
+            }
+        }
     }
 }
 
