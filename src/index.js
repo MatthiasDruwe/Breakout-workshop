@@ -136,10 +136,11 @@ class MyGame extends Phaser.Scene
      * @param {Phaser.Physics.Arcade.Image} block 
      * @param {Phaser.Physics.Arcade.Image} ball 
      */
-    removeBlock(block, ball) {
+    removeBlock(block, ball) 
+    {
         block.destroy();
         this.score++;
-        this.updateScore();
+        this.scoreText.setText('Score: ' + this.score);
         const index = this.blocks.indexOf(block);
         this.blocks.splice(index, 1)
 
@@ -151,11 +152,6 @@ class MyGame extends Phaser.Scene
             this.ball.setVelocity(0);
             this.ball.setVisible(false);
         }
-    }
-
-    updateScore()
-    {
-        this.scoreText.setText('Score: ' + this.score);
     }
 
     update(time, delta)
