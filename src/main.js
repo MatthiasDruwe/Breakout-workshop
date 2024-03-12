@@ -23,7 +23,7 @@ class MyGame extends Phaser.Scene
 
     create()
     {
-        this.physics.add.image(400,300, 'ball');
+        this.add.image(400,300, 'ball');
     }
 
     update(time, delta)
