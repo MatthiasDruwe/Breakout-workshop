@@ -3,7 +3,7 @@
   "version": "1.1.1",
   "description": "A Phaser 3 template using Rollup.",
   "scripts": {
-    "dev": "rollup --watch --config rollup/rollup.config.dev.mjs --no-treeshake",
+    "start": "rollup --watch --config rollup/rollup.config.dev.mjs --no-treeshake",
     "build": "rollup --config rollup/rollup.config.prod.mjs"
   },
   "repository": {
