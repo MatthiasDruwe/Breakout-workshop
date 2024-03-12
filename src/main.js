@@ -18,12 +18,12 @@ class MyGame extends Phaser.Scene
 
     preload()
     {
-
+        this.load.image('ball', ball_img)
     }
 
     create()
     {
-
+        this.physics.add.image(400,300, 'ball');
     }
 
     update(time, delta)
