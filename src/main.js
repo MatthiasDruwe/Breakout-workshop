@@ -18,12 +18,15 @@ class MyGame extends Phaser.Scene
 
     preload()
     {
-
+        this.load.image('ball', ball_img);
     }
 
     create()
     {
-
+        const ball = this.physics.add.image(400, 300, 'ball');
+        ball.setVelocity(100);
+        ball.setCollideWorldBounds(true);
+        ball.setBounce(1);
     }
 
     update(time, delta)
@@ -39,7 +42,16 @@ const config = {
     parent: 'breakout',
     width: 800,
     height: 600,
-    scene: MyGame
+    scene: MyGame,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity:
+            {
+                y:0
+            }
+        }
+    }
 };
 
 const game = new Phaser.Game(config);
